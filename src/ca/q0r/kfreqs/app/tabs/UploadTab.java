@@ -230,9 +230,6 @@ public class UploadTab extends Fragment implements View.OnClickListener {
             ob.put("id", Utils.getEmail(getView().getContext()));
         } catch (Exception ignored) { }
 
-        //TODO: Finish Progress Bar
-        //TODO: Add Downloading
-
         return upload(ob);
     }
 

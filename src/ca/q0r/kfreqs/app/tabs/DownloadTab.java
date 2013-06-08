@@ -79,9 +79,6 @@ public class DownloadTab extends Fragment implements View.OnClickListener {
             }
 
         });
-
-        //TODO: Finish Download Tab
-
     }
 
     @Override
