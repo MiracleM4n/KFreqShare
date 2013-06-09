@@ -208,7 +208,9 @@ public class UploadTab extends Fragment implements View.OnClickListener {
                         key = key.replace("arm_slice_", "").replace("_volt", "");
                         key = "slice" + key;
 
-                        ob.put(key, value);
+                        Integer i = Integer.parseInt(value) * 1000;
+
+                        ob.put(key, i.toString());
                     } catch (Exception ignored) { }
                 }
             }

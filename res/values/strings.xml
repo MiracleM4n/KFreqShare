@@ -25,5 +25,6 @@
 
     <string name="email_usage">Uses Account Email for contact!</string>
     <string name="upload_confirm">Are you sure you want to upload profile \"@profile_id\"?</string>
+    <string name="download_confirm">Are you sure you want to download \"@profile_id\" with ASV \"@asv\"?</string>
 
 </resources>

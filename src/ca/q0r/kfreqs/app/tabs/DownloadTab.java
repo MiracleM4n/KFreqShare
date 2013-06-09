@@ -1,7 +1,9 @@
 package ca.q0r.kfreqs.app.tabs;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -98,13 +100,37 @@ public class DownloadTab extends Fragment implements View.OnClickListener {
             DownloadTask dTask = new DownloadTask();
             dTask.execute("");
 
-            WriteTask wTask = new WriteTask();
-            wTask.execute("");
+            createConfirm();
         } else if (id == R.id.button_remote_cancel) {
             uploadDecline.setVisibility(LinearLayout.GONE);
         } /*else {
             uploadDecline.setVisibility(LinearLayout.VISIBLE);
         }*/
+    }
+
+    /*----------------------------
+    ----------  Dialogs  ----------
+    ----------------------------*/
+
+    public AlertDialog createConfirm() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getView().getContext());
+
+        String st = getString(R.string.download_confirm).replace("@profile_id", pName).replace("@asv", map.get("asv"));
+
+        builder.setMessage(st)
+                .setPositiveButton(R.string.button_download, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        WriteTask wTask = new WriteTask();
+                        wTask.execute("");
+                    }})
+                .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }});
+
+        return builder.create();
     }
 
     /*----------------------------
@@ -308,7 +334,7 @@ public class DownloadTab extends Fragment implements View.OnClickListener {
         @Override
         protected Boolean doInBackground(String... strings) {
             String profile = pName;
-            File prf = new File(Utils.getProfilesPath(), profile + ".profile");
+            File prf = new File(Utils.getProfilesPath(), profile + "_r.profile");
             Boolean result = false;
 
             //Properties rProp = new Properties();
