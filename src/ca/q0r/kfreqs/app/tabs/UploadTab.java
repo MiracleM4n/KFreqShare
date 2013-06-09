@@ -125,7 +125,7 @@ public class UploadTab extends Fragment implements View.OnClickListener {
         String st = getString(R.string.upload_confirm).replace("@profile_id", profile.split("\\.")[0]);
 
         builder.setMessage(st)
-                .setPositiveButton(R.id.button_local_upload, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.button_upload, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         AlertDialog d = createUpload();
@@ -133,7 +133,7 @@ public class UploadTab extends Fragment implements View.OnClickListener {
                         dialog.dismiss();
                         d.show();
                     }})
-                .setNegativeButton(R.id.button_local_cancel, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
@@ -152,7 +152,7 @@ public class UploadTab extends Fragment implements View.OnClickListener {
         final View input = inflater.inflate(R.layout.dialog_confirm, null);
 
         builder.setView(input)
-                .setPositiveButton(R.id.button_local_upload, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.button_upload, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         EditText eName = (EditText) input.findViewById(R.id.dialog_name);
@@ -170,7 +170,7 @@ public class UploadTab extends Fragment implements View.OnClickListener {
                         }
                     }
                 })
-                .setNegativeButton(R.id.button_local_cancel, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
