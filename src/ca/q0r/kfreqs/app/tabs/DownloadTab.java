@@ -25,24 +25,20 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Properties;
+import java.io.*;
+import java.util.*;
 
 public class DownloadTab extends Fragment implements View.OnClickListener {
     public String pName = "";
-    public String key = "";
-    public String value = "";
     ArrayList<String> list;
+    HashMap<String, String> map;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         list = new ArrayList<String>();
+        map = new HashMap<String, String>();
 
         LinearLayout uploadDecline = (LinearLayout) getView().findViewById(R.id.layout_dc);
         uploadDecline.setVisibility(LinearLayout.GONE);
@@ -103,7 +99,7 @@ public class DownloadTab extends Fragment implements View.OnClickListener {
             dTask.execute("");
 
             WriteTask wTask = new WriteTask();
-            wTask.execute(key, value);
+            wTask.execute("");
         } else if (id == R.id.button_remote_cancel) {
             uploadDecline.setVisibility(LinearLayout.GONE);
         } /*else {
@@ -287,8 +283,7 @@ public class DownloadTab extends Fragment implements View.OnClickListener {
                         String key = kV.toString().split("=")[0];
                         String value = jObj.get(key).toString();
 
-                        DownloadTab.this.key = key;
-                        DownloadTab.this.value = value;
+                        map.put(key, value);
                     }
                 }
             }
@@ -308,8 +303,6 @@ public class DownloadTab extends Fragment implements View.OnClickListener {
             pDialog.setMessage("Please wait...");
             pDialog.setIndeterminate(true);
             pDialog.show();
-
-            System.err.println("NOT EXECUTING");
         }
 
         @Override
@@ -318,42 +311,60 @@ public class DownloadTab extends Fragment implements View.OnClickListener {
             File prf = new File(Utils.getProfilesPath(), profile + ".profile");
             Boolean result = false;
 
-            String key = strings[0];
-            String value = strings[1];
-
-            Properties rProp = new Properties();
-            Properties wProp = new Properties();
+            //Properties rProp = new Properties();
+            LinkedProperties wProp = new LinkedProperties();
 
             if (!prf.exists()) {
                 try {
                     if (!prf.createNewFile()
-                            || !prf.setReadable(true)
-                            || !prf.setWritable(true)
-                            || !prf.setExecutable(true)) {
+                            || !prf.setReadable(true, false)
+                            || !prf.setWritable(true, false)
+                            || !prf.setExecutable(true, false)) {
                         result = false;
                     }
 
-                    rProp.load(new FileInputStream(Utils.getDefaultProfile()));
+                    /*rProp.load(new FileInputStream(Utils.getDefaultProfile()));
                     wProp.load(new FileInputStream(prf));
 
-                    for (Map.Entry map : rProp.entrySet()) {
-                        wProp.setProperty(map.getKey().toString(), map.getValue().toString());
+                    wProp.putAll(rProp);
+
+                    wProp.store(new FileOutputStream(prf), null);*/
+
+                    InputStream inStream = new FileInputStream(Utils.getDefaultProfile());
+                    OutputStream outStream = new FileOutputStream(prf);
+
+                    byte[] buffer = new byte[1024];
+
+                    int length;
+                    while ((length = inStream.read(buffer)) > 0){
+                        outStream.write(buffer, 0, length);
                     }
 
-                    wProp.store(new FileOutputStream(prf), null);
+                    inStream.close();
+                    outStream.close();
                 } catch (Exception ignored) { }
             }
 
             try {
                 wProp.load(new FileInputStream(prf));
 
-                if (key.startsWith("slice")) {
-                    key = "arm_slice_" + key + "_volt";
-                } else {
-                    key = "CPU_VOLT_" + key;
-                }
+                for (Map.Entry<String, String> entry : DownloadTab.this.map.entrySet()) {
+                    String key = entry.getKey();
+                    String value = entry.getValue();
 
-                wProp.setProperty(key, value);
+                    if (key.startsWith("slice")) {
+                        key = "arm_slice_" + key.replace("slice", "") + "_volt";
+
+                        Integer i = Integer.parseInt(value) / 1000;
+
+                        wProp.put(key, i.toString());
+                    } else if (key.contains("0")) {
+                        key = "CPU_VOLT_" + key;
+
+                        wProp.put(key, value);
+                    }
+
+                }
 
                 wProp.store(new FileOutputStream(prf), null);
 
@@ -381,5 +392,47 @@ public class DownloadTab extends Fragment implements View.OnClickListener {
 
             toast.show();
         }
+    }
+
+    private class LinkedProperties extends Properties {
+        private LinkedHashMap<Object, Object> entries = new LinkedHashMap<Object, Object>();
+
+        public Enumeration<Object> keys() { return Collections.enumeration(entries.keySet()); }
+
+        public Enumeration<Object> elements() { return Collections.enumeration(entries.values()); }
+
+        public boolean contains(Object value) { return entries.containsValue(value); }
+
+        public void putAll(Map<?, ?> map) {
+            entries.putAll(map);
+        }
+
+        public int size() { return entries.size(); }
+
+        public boolean isEmpty() { return entries.isEmpty(); }
+
+        public boolean containsKey(Object key) { return entries.containsKey(key); }
+
+        public boolean containsValue(Object value) {        return entries.containsValue(value); }
+
+        public Object get(Object key) { return entries.get(key); }
+
+        public Object put(Object key, Object value) { return entries.put(key, value); }
+
+        public Object remove(Object key) { return entries.remove(key); }
+
+        public void clear() { entries.clear(); }
+
+        public Set<Object> keySet() { return entries.keySet(); }
+
+        public Collection<Object> values() { return entries.values(); }
+
+        public Set<Entry<Object, Object>> entrySet() { return entries.entrySet(); }
+
+        public boolean equals(Object o) {
+            return o instanceof Entry && entries.equals(o);
+        }
+
+        public int hashCode() { return entries.hashCode(); }
     }
 }
