@@ -161,7 +161,7 @@ public class UploadTab extends Fragment implements View.OnClickListener {
                         Editable name = eName.getText();
                         Editable asv = eAsv.getText();
 
-                        Toast toast = Toast.makeText(UploadTab.this.getView().getContext(), "", Toast.LENGTH_LONG);
+                        Toast toast = Toast.makeText(getView().getContext(), "", Toast.LENGTH_LONG);
 
 
                         if (Utils.checkData(toast, name, asv)) {
@@ -264,7 +264,7 @@ public class UploadTab extends Fragment implements View.OnClickListener {
         @Override
         protected Boolean doInBackground(JSONObject... jsons) {
             ConnectivityManager connMgr = (ConnectivityManager)
-                    UploadTab.this.getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                    getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
 
             NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
@@ -330,7 +330,7 @@ public class UploadTab extends Fragment implements View.OnClickListener {
                 pDialog.cancel();
             }
 
-            Toast toast = Toast.makeText(UploadTab.this.getView().getContext(), "", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(getView().getContext(), "", Toast.LENGTH_LONG);
 
             toast.setDuration(Toast.LENGTH_LONG);
 

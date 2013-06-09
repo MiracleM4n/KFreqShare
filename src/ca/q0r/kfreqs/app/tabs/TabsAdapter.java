@@ -58,8 +58,6 @@ public class TabsAdapter extends FragmentPagerAdapter implements ActionBar.TabLi
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
         mViewPager.setCurrentItem(tab.getPosition());
 
-        //Log.v("Q0r", "clicked");
-
         Object tag = tab.getTag();
 
         for (int i = 0; i < mTabs.size(); i++){

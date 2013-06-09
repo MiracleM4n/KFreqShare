@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import ca.q0r.kfreqs.app.R;
+import ca.q0r.kfreqs.app.prop.LinkedProperties;
 import ca.q0r.kfreqs.app.util.Utils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -23,7 +24,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -33,6 +33,7 @@ import java.util.*;
 public class DownloadTab extends Fragment implements View.OnClickListener {
     public String pName = "";
     ArrayList<String> list;
+    HashMap<String, String> iMap;
     HashMap<String, String> map;
 
     @Override
@@ -40,6 +41,7 @@ public class DownloadTab extends Fragment implements View.OnClickListener {
         super.onActivityCreated(savedInstanceState);
 
         list = new ArrayList<String>();
+        iMap = new HashMap<String, String>();
         map = new HashMap<String, String>();
 
         LinearLayout uploadDecline = (LinearLayout) getView().findViewById(R.id.layout_dc);
@@ -61,7 +63,7 @@ public class DownloadTab extends Fragment implements View.OnClickListener {
 
         task.execute("");
 
-        ArrayAdapter<String>  adapter = new ArrayAdapter<String>(getView().getContext(), android.R.layout.simple_list_item_1, list);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getView().getContext(), android.R.layout.simple_list_item_1, list);
 
         lv.setAdapter(adapter);
 
@@ -71,7 +73,18 @@ public class DownloadTab extends Fragment implements View.OnClickListener {
                                     int position, long id) {
                 LinearLayout uploadDecline = (LinearLayout) getView().findViewById(R.id.layout_dc);
 
-                pName = list.get(position - 1);
+                TextView tv = (TextView) view;
+
+                pName = tv.getText().toString();
+
+                String asv = iMap.get(pName);
+
+                if (asv != null) {
+                    Toast toast = Toast.makeText(getView().getContext(), "", Toast.LENGTH_SHORT);
+
+                    toast.setText("ASV: " + asv);
+                    toast.show();
+                }
 
                 uploadDecline.setVisibility(LinearLayout.VISIBLE);
             }
@@ -97,32 +110,32 @@ public class DownloadTab extends Fragment implements View.OnClickListener {
         if (id == R.id.button_remote_download) {
             uploadDecline.setVisibility(LinearLayout.GONE);
 
-            DownloadTask dTask = new DownloadTask();
-            dTask.execute("");
+            String asv = iMap.get(pName);
+
+            if (asv != null) {
+                createConfirm(asv).show();
+            }
         } else if (id == R.id.button_remote_cancel) {
             uploadDecline.setVisibility(LinearLayout.GONE);
-        } /*else {
-            uploadDecline.setVisibility(LinearLayout.VISIBLE);
-        }*/
+        }
     }
 
     /*----------------------------
     ----------  Dialogs  ----------
     ----------------------------*/
 
-    private AlertDialog createConfirm() {
-        System.err.println("GOT HERE");
+    private AlertDialog createConfirm(String asv) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getView().getContext());
 
         String st = getString(R.string.download_confirm).replace("@profile_id", pName);
-        st = st.replace("@asv", map.get("asv"));
+        st = st.replace("@asv", asv);
 
         builder.setMessage(st)
                 .setPositiveButton(R.string.button_download, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        WriteTask wTask = new WriteTask();
-                        wTask.execute("");
+                        DownloadTask dTask = new DownloadTask();
+                        dTask.execute("");
                     }})
                 .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
                     @Override
@@ -137,7 +150,7 @@ public class DownloadTab extends Fragment implements View.OnClickListener {
     -----------  Tasks  -----------
     ----------------------------*/
 
-    private class InfoTask extends AsyncTask<String, Void, ArrayList<Object>> {
+    private class InfoTask extends AsyncTask<String, Void, Object> {
         private ProgressDialog pDialog;
 
         @Override
@@ -151,11 +164,9 @@ public class DownloadTab extends Fragment implements View.OnClickListener {
         }
 
         @Override
-        protected ArrayList<Object> doInBackground(String... strings) {
-            ArrayList<Object> list = new ArrayList<Object>();
-
+        protected Object doInBackground(String... strings) {
             ConnectivityManager connMgr = (ConnectivityManager)
-                    DownloadTab.this.getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                    getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
 
             NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
@@ -177,9 +188,7 @@ public class DownloadTab extends Fragment implements View.OnClickListener {
 
                     JSONParser parser = new JSONParser();
 
-                    Object obj = parser.parse(EntityUtils.toString(entity));
-
-                    list.add(obj);
+                    return parser.parse(EntityUtils.toString(entity));
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
@@ -190,37 +199,46 @@ public class DownloadTab extends Fragment implements View.OnClickListener {
                 pDialog.cancel();
             }
 
-            return list;
+            return null;
         }
 
         @Override
-        protected void onPostExecute(ArrayList<Object> list) {
+        protected void onPostExecute(Object obj) {
             pDialog.setMessage("Info Download Complete!");
             pDialog.cancel();
 
-            Toast toast = Toast.makeText(DownloadTab.this.getView().getContext(), "", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(getView().getContext(), "", Toast.LENGTH_LONG);
 
             toast.setDuration(Toast.LENGTH_LONG);
 
             toast.setText("Info Download Not Successful!");
 
-            for (Object obj : list) {
-                toast.setText("Info Download Successful!");
+            if (obj instanceof JSONObject) {
+                JSONObject jObj = (JSONObject) obj;
 
-                if (obj instanceof JSONArray) {
-                    JSONArray jArr = (JSONArray) obj;
+                for (Object kV : jObj.entrySet()) {
+                    String key = kV.toString().split("=")[0];
+                    String value = jObj.get(key).toString();
 
-                    for (Object o : jArr) {
-                        DownloadTab.this.list.add(o.toString());
-                    }
+                    list.add(key);
+                    iMap.put(key, value);
                 }
+
+                toast.setText("Info Download Successful!");
             }
 
             toast.show();
+
+            Collections.sort(list, new Comparator<String>() {
+                @Override
+                public int compare(String o1, String o2) {
+                    return o1.compareToIgnoreCase(o2);
+                }
+            });
         }
     }
 
-    private class DownloadTask extends AsyncTask<String, Void, ArrayList<Object>> {
+    private class DownloadTask extends AsyncTask<String, Void, Object> {
         private ProgressDialog pDialog;
 
         @Override
@@ -234,11 +252,9 @@ public class DownloadTab extends Fragment implements View.OnClickListener {
         }
 
         @Override
-        protected ArrayList<Object> doInBackground(String... strings) {
-            ArrayList<Object> list = new ArrayList<Object>();
-
+        protected Object doInBackground(String... strings) {
             ConnectivityManager connMgr = (ConnectivityManager)
-                    DownloadTab.this.getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                    getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
 
             NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
@@ -250,7 +266,7 @@ public class DownloadTab extends Fragment implements View.OnClickListener {
 
                     ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
 
-                    nameValuePairs.add(new BasicNameValuePair("values", DownloadTab.this.pName));
+                    nameValuePairs.add(new BasicNameValuePair("values", pName));
 
                     httpPostRequest.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
@@ -260,9 +276,7 @@ public class DownloadTab extends Fragment implements View.OnClickListener {
 
                     JSONParser parser = new JSONParser();
 
-                    Object obj = parser.parse(EntityUtils.toString(entity));
-
-                    list.add(obj);
+                    return parser.parse(EntityUtils.toString(entity));
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
@@ -273,50 +287,37 @@ public class DownloadTab extends Fragment implements View.OnClickListener {
                 pDialog.cancel();
             }
 
-            return list;
+            return null;
         }
 
         @Override
-        protected void onPostExecute(ArrayList<Object> list) {
+        protected void onPostExecute(Object obj) {
             pDialog.setMessage("Profile Download Complete!");
             pDialog.cancel();
 
-            Toast toast = Toast.makeText(DownloadTab.this.getView().getContext(), "", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(getView().getContext(), "", Toast.LENGTH_LONG);
 
             toast.setDuration(Toast.LENGTH_LONG);
 
             toast.setText("Profile Download Not Successful!");
 
-            for (Object oj : list) {
-                JSONObject jObj = null;
+            if (obj instanceof JSONObject) {
+                JSONObject jObj = (JSONObject) obj;
 
-                if (oj instanceof JSONArray) {
-                    JSONArray jArr = (JSONArray) oj;
+                for (Object kV : jObj.entrySet()) {
+                    String key = kV.toString().split("=")[0];
+                    String value = jObj.get(key).toString();
 
-                    Object obj = jArr.get(0);
-
-                    jObj = (JSONObject) obj;
-
-                    if (jObj instanceof  JSONObject) {
-                        jObj = (JSONObject) obj;
-                    }
+                    map.put(key, value);
                 }
 
-                if (jObj != null) {
-                    toast.setText("Profile Download Successful!");
-
-                    for (Object kV : jObj.entrySet()) {
-                        String key = kV.toString().split("=")[0];
-                        String value = jObj.get(key).toString();
-
-                        map.put(key, value);
-                    }
-                }
+                toast.setText("Profile Download Successful!");
             }
 
             toast.show();
 
-            createConfirm().show();
+            WriteTask wTask = new WriteTask();
+            wTask.execute("");
         }
     }
 
@@ -339,7 +340,6 @@ public class DownloadTab extends Fragment implements View.OnClickListener {
             File prf = new File(Utils.getProfilesPath(), profile + "_r.profile");
             Boolean result = false;
 
-            //Properties rProp = new Properties();
             LinkedProperties wProp = new LinkedProperties();
 
             if (!prf.exists()) {
@@ -350,13 +350,6 @@ public class DownloadTab extends Fragment implements View.OnClickListener {
                             || !prf.setExecutable(true, false)) {
                         result = false;
                     }
-
-                    /*rProp.load(new FileInputStream(Utils.getDefaultProfile()));
-                    wProp.load(new FileInputStream(prf));
-
-                    wProp.putAll(rProp);
-
-                    wProp.store(new FileOutputStream(prf), null);*/
 
                     InputStream inStream = new FileInputStream(Utils.getDefaultProfile());
                     OutputStream outStream = new FileOutputStream(prf);
@@ -376,7 +369,7 @@ public class DownloadTab extends Fragment implements View.OnClickListener {
             try {
                 wProp.load(new FileInputStream(prf));
 
-                for (Map.Entry<String, String> entry : DownloadTab.this.map.entrySet()) {
+                for (Map.Entry<String, String> entry : map.entrySet()) {
                     String key = entry.getKey();
                     String value = entry.getValue();
 
@@ -408,7 +401,7 @@ public class DownloadTab extends Fragment implements View.OnClickListener {
             pDialog.cancel();
             pDialog.dismiss();
 
-            Toast toast = Toast.makeText(DownloadTab.this.getView().getContext(), "", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(getView().getContext(), "", Toast.LENGTH_LONG);
 
             toast.setDuration(Toast.LENGTH_LONG);
 
@@ -420,47 +413,5 @@ public class DownloadTab extends Fragment implements View.OnClickListener {
 
             toast.show();
         }
-    }
-
-    private class LinkedProperties extends Properties {
-        private LinkedHashMap<Object, Object> entries = new LinkedHashMap<Object, Object>();
-
-        public Enumeration<Object> keys() { return Collections.enumeration(entries.keySet()); }
-
-        public Enumeration<Object> elements() { return Collections.enumeration(entries.values()); }
-
-        public boolean contains(Object value) { return entries.containsValue(value); }
-
-        public void putAll(Map<?, ?> map) {
-            entries.putAll(map);
-        }
-
-        public int size() { return entries.size(); }
-
-        public boolean isEmpty() { return entries.isEmpty(); }
-
-        public boolean containsKey(Object key) { return entries.containsKey(key); }
-
-        public boolean containsValue(Object value) {        return entries.containsValue(value); }
-
-        public Object get(Object key) { return entries.get(key); }
-
-        public Object put(Object key, Object value) { return entries.put(key, value); }
-
-        public Object remove(Object key) { return entries.remove(key); }
-
-        public void clear() { entries.clear(); }
-
-        public Set<Object> keySet() { return entries.keySet(); }
-
-        public Collection<Object> values() { return entries.values(); }
-
-        public Set<Entry<Object, Object>> entrySet() { return entries.entrySet(); }
-
-        public boolean equals(Object o) {
-            return o instanceof Entry && entries.equals(o);
-        }
-
-        public int hashCode() { return entries.hashCode(); }
     }
 }
