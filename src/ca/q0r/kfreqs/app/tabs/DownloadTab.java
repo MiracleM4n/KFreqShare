@@ -99,8 +99,6 @@ public class DownloadTab extends Fragment implements View.OnClickListener {
 
             DownloadTask dTask = new DownloadTask();
             dTask.execute("");
-
-            createConfirm();
         } else if (id == R.id.button_remote_cancel) {
             uploadDecline.setVisibility(LinearLayout.GONE);
         } /*else {
@@ -112,10 +110,12 @@ public class DownloadTab extends Fragment implements View.OnClickListener {
     ----------  Dialogs  ----------
     ----------------------------*/
 
-    public AlertDialog createConfirm() {
+    private AlertDialog createConfirm() {
+        System.err.println("GOT HERE");
         AlertDialog.Builder builder = new AlertDialog.Builder(getView().getContext());
 
-        String st = getString(R.string.download_confirm).replace("@profile_id", pName).replace("@asv", map.get("asv"));
+        String st = getString(R.string.download_confirm).replace("@profile_id", pName);
+        st = st.replace("@asv", map.get("asv"));
 
         builder.setMessage(st)
                 .setPositiveButton(R.string.button_download, new DialogInterface.OnClickListener() {
@@ -315,6 +315,8 @@ public class DownloadTab extends Fragment implements View.OnClickListener {
             }
 
             toast.show();
+
+            createConfirm().show();
         }
     }
 
