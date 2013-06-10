@@ -2,27 +2,25 @@ package ca.q0r.kfreqs.app.util;
 
 import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.execution.CommandCapture;
+import com.stericson.RootTools.execution.Shell;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RootUtils {
-    private static String LOG_TAG = RootUtils.class.getName();
-
+    private static Shell shell;
     private static Boolean rooted = false;
 
-    public RootUtils(String tag) {
-        LOG_TAG = tag;
-        initRoot();
-    }
-
     public static void initRoot() {
-
-        RootTools.log(LOG_TAG, "Logging Initialized", 3, null);
-
         if (RootTools.isRootAvailable()
                 || RootTools.isAccessGiven()) {
-            rooted = true;
+            try {
+                shell = RootTools.getShell(true);
+
+                rooted = true;
+            } catch (Exception ignored) {
+                rooted = false;
+            }
         }
     }
 
@@ -31,28 +29,28 @@ public class RootUtils {
     }
 
     public static void reset() {
-        rooted = false;
+        try {
+            shell.close();
+        } catch (Exception ignored) { }
 
-        RootTools.log(LOG_TAG, "Logging Stopped", 3, null);
+        rooted = false;
     }
 
     public static List<String> executeCommand(String comm) {
-        if (!rooted) {
-            return null;
-        }
-
         final List<String> output = new ArrayList<String>();
 
-        CommandCapture command = new CommandCapture(0, comm){
-            @Override
-            public void output(int id, String line) {
-                output.add(line);
-            }
-        };
+        if (rooted) {
+            CommandCapture command = new CommandCapture(0, comm){
+                @Override
+                public void output(int id, String line) {
+                    output.add(line);
+                }
+            };
 
-        try {
-            RootTools.getShell(true).add(command).waitForFinish();
-        } catch (Exception ignored) { }
+            try {
+                shell.add(command).waitForFinish();
+            } catch (Exception ignored) { }
+        }
 
         return output;
     }

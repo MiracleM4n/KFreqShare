@@ -4,16 +4,15 @@
 
     <string name="button_upload">Upload</string>
     <string name="button_download">Download</string>
+    <string name="button_apply">Apply</string>
     <string name="button_write">Write</string>
     <string name="button_cancel">Cancel</string>
     <string name="button_yes">Yes</string>
     <string name="button_no">No</string>
 
-    <string name="upload_tab">Upload</string>
-    <string name="download_tab">Download</string>
+    <string name="string_local">Local</string>
+    <string name="string_remote">Remote</string>
 
-    <string name="soon_title">Coming soon!</string>
-    <string name="soon_text">Noep</string>
     <string name="developer_title">Developer Info</string>
     <string name="developer_text">Developed by MiracleM4n</string>
 
@@ -25,6 +24,7 @@
     <string name="asv_number">ASV Number</string>
 
     <string name="email_usage">Uses Account Email for contact!</string>
+    <string name="apply_confirm">Are you sure you want to apply profile \"@profile_id\"?</string>
     <string name="upload_confirm">Are you sure you want to upload profile \"@profile_id\"?</string>
     <string name="download_confirm">Are you sure you want to download \"@profile_id\" with ASV \"@asv\"?</string>
 

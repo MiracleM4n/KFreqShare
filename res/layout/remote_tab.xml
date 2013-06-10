@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/upload_tab"
+    android:id="@+id/remote_tab"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
     android:background="#AA000000" >
 
     <ListView
-        android:id="@+id/view_local_profiles"
+        android:id="@+id/view_remote_profiles"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:fastScrollEnabled="true"
+        android:scrollbarStyle="insideInset" />
 
     <LinearLayout
-        android:id="@+id/layout_uc"
+        android:id="@+id/layout_dc"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,7 +24,7 @@
         android:paddingTop="2dip">
 
         <Button
-            android:id="@+id/button_local_cancel"
+            android:id="@+id/button_remote_cancel"
             android:layout_width="0dip"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -32,13 +34,13 @@
             />
 
         <Button
-            android:id="@+id/button_local_upload"
+            android:id="@+id/button_remote_download"
             android:layout_width="0dip"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:typeface="serif"
             android:textColor="#ffffffff"
-            android:text="@string/button_upload"
+            android:text="@string/button_download"
             />
     </LinearLayout>
 
