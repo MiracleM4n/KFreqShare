@@ -29,11 +29,11 @@
     <string name="text_no_root">No root access, or timeout!</string>
 
     <string name="text_asv_blank">ASV is blank!</string>
-    <string name="text_asv_not_number">ASV isn\\'t a number!</string>
+    <string name="text_asv_not_number">ASV isn\'t a number!</string>
     <string name="text_name_blank">Name is blank!</string>
     <string name="text_no_internet">No Internet Connection Found!</string>
-    <string name="text_not_asv">ASV has to be 1\\-12!</string>
-    <string name="text_please_wait">Please wait\\.\\.\\.</string>
+    <string name="text_not_asv">ASV has to be 1–12!</string>
+    <string name="text_please_wait">Please wait...</string>
 
     <string name="email_usage">Uses Android Email for contact!</string>
 
