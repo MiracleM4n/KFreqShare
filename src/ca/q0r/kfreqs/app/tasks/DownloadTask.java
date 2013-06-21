@@ -27,11 +27,13 @@ public class DownloadTask extends AsyncTask<String, Void, Object> {
     private Fragment fragment;
     private String pName;
     private HashMap<String, String> vMap;
+    private Boolean connect;
 
     public DownloadTask(Fragment frag, String profile) {
         fragment = frag;
         pName = profile;
         vMap = new HashMap<String, String>();
+        connect = true;
     }
 
     @Override
@@ -72,8 +74,7 @@ public class DownloadTask extends AsyncTask<String, Void, Object> {
                 httpclient.getConnectionManager().shutdown();
             }
         } else {
-            pDialog.setMessage(fragment.getString(R.string.text_no_internet));
-            pDialog.cancel();
+            connect = false;
         }
 
         return null;
@@ -81,6 +82,11 @@ public class DownloadTask extends AsyncTask<String, Void, Object> {
 
     @Override
     protected void onPostExecute(Object obj) {
+        if (!connect) {
+            pDialog.setMessage(fragment.getString(R.string.text_no_internet));
+            pDialog.cancel();
+        }
+
         Toast toast = Toast.makeText(fragment.getView().getContext(), "", Toast.LENGTH_LONG);
 
         toast.setDuration(Toast.LENGTH_LONG);

@@ -31,13 +31,14 @@ public class InfoTask extends AsyncTask<String, Void, Object> {
     private Boolean showToast;
     private ArrayList<String> list;
     private HashMap<String, String> aMap;
-
+    private Boolean connect;
 
     public InfoTask(RemoteTab rTab, Boolean toast) {
         tab = rTab;
         list = new ArrayList<String>();
         aMap = new HashMap<String, String>();
         showToast = toast;
+        connect = true;
     }
 
     @Override
@@ -79,8 +80,7 @@ public class InfoTask extends AsyncTask<String, Void, Object> {
                 httpclient.getConnectionManager().shutdown();
             }
         } else {
-            pDialog.setMessage(tab.getString(R.string.text_no_internet));
-            pDialog.cancel();
+            connect = false;
         }
 
         return null;
@@ -88,6 +88,11 @@ public class InfoTask extends AsyncTask<String, Void, Object> {
 
     @Override
     protected void onPostExecute(Object obj) {
+        if (!connect) {
+            pDialog.setMessage(tab.getString(R.string.text_no_internet));
+            pDialog.cancel();
+        }
+
         Toast toast = Toast.makeText(tab.getView().getContext(), "", Toast.LENGTH_LONG);
 
         toast.setDuration(Toast.LENGTH_LONG);

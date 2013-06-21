@@ -25,10 +25,12 @@ public class UploadTask extends AsyncTask<String, Void, Boolean> {
     private ProgressDialog pDialog;
     private Fragment fragment;
     private JSONObject json;
+    private boolean connect;
 
     public UploadTask(Fragment frag, JSONObject jObj) {
         fragment = frag;
         json = jObj;
+        connect = true;
     }
 
     @Override
@@ -80,9 +82,7 @@ public class UploadTask extends AsyncTask<String, Void, Boolean> {
                 httpclient.getConnectionManager().shutdown();
             }
         } else {
-            pDialog.setMessage(fragment.getString(R.string.text_no_internet));
-            pDialog.cancel();
-
+            connect = false;
             return false;
         }
 
@@ -91,8 +91,13 @@ public class UploadTask extends AsyncTask<String, Void, Boolean> {
 
     @Override
     protected void onPostExecute(Boolean result) {
-        pDialog.setMessage(fragment.getString(R.string.action_upload_complete));
-        pDialog.cancel();
+        if (connect) {
+            pDialog.setMessage(fragment.getString(R.string.action_upload_complete));
+            pDialog.cancel();
+        } else {
+            pDialog.setMessage(fragment.getString(R.string.text_no_internet));
+            pDialog.cancel();
+        }
 
         Toast toast = Toast.makeText(fragment.getView().getContext(), "", Toast.LENGTH_LONG);
 
