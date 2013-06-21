@@ -7,6 +7,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
+import ca.q0r.kfreqs.app.R;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -34,8 +35,8 @@ public class UploadTask extends AsyncTask<String, Void, Boolean> {
     protected void onPreExecute() {
         pDialog = new ProgressDialog(fragment.getView().getContext());
 
-        pDialog.setTitle("Uploading");
-        pDialog.setMessage("Please wait...");
+        pDialog.setTitle(R.string.title_uploading);
+        pDialog.setMessage(fragment.getString(R.string.text_please_wait));
         pDialog.setIndeterminate(true);
         pDialog.show();
     }
@@ -79,10 +80,8 @@ public class UploadTask extends AsyncTask<String, Void, Boolean> {
                 httpclient.getConnectionManager().shutdown();
             }
         } else {
-            if (pDialog != null) {
-                pDialog.setMessage("No Internet Connection Found!");
-                pDialog.cancel();
-            }
+            pDialog.setMessage(fragment.getString(R.string.text_no_internet));
+            pDialog.cancel();
 
             return false;
         }
@@ -92,18 +91,16 @@ public class UploadTask extends AsyncTask<String, Void, Boolean> {
 
     @Override
     protected void onPostExecute(Boolean result) {
-        if (pDialog != null) {
-            pDialog.setMessage("Upload Complete!");
-            pDialog.cancel();
-        }
+        pDialog.setMessage(fragment.getString(R.string.action_upload_complete));
+        pDialog.cancel();
 
         Toast toast = Toast.makeText(fragment.getView().getContext(), "", Toast.LENGTH_LONG);
 
         toast.setDuration(Toast.LENGTH_LONG);
-        toast.setText("Upload Not Successful!");
+        toast.setText(R.string.action_upload_fail);
 
         if (result) {
-            toast.setText("Upload Successful!");
+            toast.setText(R.string.action_upload_success);
         }
 
         toast.show();

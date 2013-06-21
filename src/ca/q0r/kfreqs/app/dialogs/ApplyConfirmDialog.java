@@ -18,22 +18,23 @@ public class ApplyConfirmDialog {
     public AlertDialog createDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(fragment.getView().getContext());
 
-        String st = fragment.getString(R.string.apply_confirm).replace("@profile_id", profile.split("\\.")[0]);
+        String st = fragment.getString(R.string.confirm_apply)
+                .replace("@profile_id", profile.split("\\.")[0]);
 
         builder.setMessage(st)
-                .setPositiveButton(R.string.button_apply, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.title_apply, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         ApplyTask task = new ApplyTask(fragment, profile);
 
                         task.execute("");
 
-                        dialog.dismiss();
+                        dialog.cancel();
                     }})
-                .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.title_cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
+                        dialog.cancel();
                     }});
 
         return builder.create();

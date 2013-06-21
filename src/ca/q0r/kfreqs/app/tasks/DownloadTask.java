@@ -7,6 +7,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
+import ca.q0r.kfreqs.app.R;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -37,8 +38,8 @@ public class DownloadTask extends AsyncTask<String, Void, Object> {
     protected void onPreExecute() {
         pDialog = new ProgressDialog(fragment.getView().getContext());
 
-        pDialog.setTitle("Downloading Profile");
-        pDialog.setMessage("Please wait...");
+        pDialog.setTitle(R.string.title_downloading);
+        pDialog.setMessage(fragment.getString(R.string.text_please_wait));
         pDialog.setIndeterminate(true);
         pDialog.show();
     }
@@ -71,7 +72,7 @@ public class DownloadTask extends AsyncTask<String, Void, Object> {
                 httpclient.getConnectionManager().shutdown();
             }
         } else {
-            pDialog.setMessage("No Internet Connection Found!");
+            pDialog.setMessage(fragment.getString(R.string.text_no_internet));
             pDialog.cancel();
         }
 
@@ -80,15 +81,15 @@ public class DownloadTask extends AsyncTask<String, Void, Object> {
 
     @Override
     protected void onPostExecute(Object obj) {
-        pDialog.setMessage("Profile Download Complete!");
-        pDialog.cancel();
-
         Toast toast = Toast.makeText(fragment.getView().getContext(), "", Toast.LENGTH_LONG);
 
         toast.setDuration(Toast.LENGTH_LONG);
-        toast.setText("Profile Download Not Successful!");
+        toast.setText(R.string.action_download_fail);
 
-        if (obj instanceof JSONObject) {
+        if (obj != null && obj instanceof JSONObject) {
+            pDialog.setMessage(fragment.getString(R.string.action_download_complete));
+            pDialog.cancel();
+
             JSONObject jObj = (JSONObject) obj;
 
             for (Object kV : jObj.entrySet()) {
@@ -98,7 +99,7 @@ public class DownloadTask extends AsyncTask<String, Void, Object> {
                 vMap.put(key, value);
             }
 
-            toast.setText("Profile Download Successful!");
+            toast.setText(R.string.action_download_success);
         }
 
         toast.show();

@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
+import ca.q0r.kfreqs.app.R;
 import ca.q0r.kfreqs.app.prop.LinkedProperties;
 import ca.q0r.kfreqs.app.util.Utils;
 
@@ -27,8 +28,8 @@ public class WriteTask extends AsyncTask<String, Void, Boolean> {
     protected void onPreExecute() {
         pDialog = new ProgressDialog(fragment.getView().getContext());
 
-        pDialog.setTitle("Writing Profile");
-        pDialog.setMessage("Please wait...");
+        pDialog.setTitle(R.string.title_writing);
+        pDialog.setMessage(fragment.getString(R.string.text_please_wait));
         pDialog.setIndeterminate(true);
         pDialog.show();
     }
@@ -96,17 +97,16 @@ public class WriteTask extends AsyncTask<String, Void, Boolean> {
 
     @Override
     protected void onPostExecute(Boolean result) {
-        pDialog.setMessage("Profile Writing Complete!");
+        pDialog.setMessage(fragment.getString(R.string.action_write_complete));
         pDialog.cancel();
-        pDialog.dismiss();
 
         Toast toast = Toast.makeText(fragment.getView().getContext(), "", Toast.LENGTH_LONG);
 
         toast.setDuration(Toast.LENGTH_LONG);
-        toast.setText("Profile Writing Not Successful!");
+        toast.setText(R.string.action_write_fail);
 
         if (result) {
-            toast.setText("Profile Writing Successful!");
+            toast.setText(R.string.action_write_success);
         }
 
         toast.show();

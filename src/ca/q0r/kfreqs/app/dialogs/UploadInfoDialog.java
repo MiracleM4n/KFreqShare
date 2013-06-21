@@ -37,7 +37,7 @@ public class UploadInfoDialog {
         final View input = inflater.inflate(R.layout.dialog_confirm, null);
 
         builder.setView(input)
-                .setPositiveButton(R.string.button_upload, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.title_upload, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         EditText eName = (EditText) input.findViewById(R.id.dialog_name);
@@ -50,14 +50,15 @@ public class UploadInfoDialog {
 
                         if (Utils.checkData(toast, name, asv)) {
                             uploadProfile(profile, name.toString(), asv.toString());
-                            dialog.dismiss();
+
+                            dialog.cancel();
                         }
                     }
                 })
-                .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.title_cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
+                        dialog.cancel();
                     }
                 });
 
@@ -108,7 +109,7 @@ public class UploadInfoDialog {
 
         try {
             ob.put("name", name);
-            ob.put("asv", asv.replace("0", ""));
+            ob.put("asv", asv);
             ob.put("id", Utils.getEmail(fragment.getView().getContext()));
         } catch (Exception ignored) { }
 

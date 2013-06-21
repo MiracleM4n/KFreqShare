@@ -65,7 +65,7 @@ public class LocalTab extends Fragment implements View.OnClickListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.local_tab, container, false);
+        return inflater.inflate(R.layout.tab_local, container, false);
     }
 
     /*----------------------------

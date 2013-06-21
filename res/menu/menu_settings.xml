@@ -12,8 +12,8 @@
         android:title="Help - WIP"
         android:showAsAction="never"/-->
 
-    <item android:id="@+id/options_refresh"
-        android:title="Refresh"
+    <item android:id="@+id/settings_refresh"
+        android:title="@string/settings_refresh"
         android:showAsAction="never"/>
 
 </menu>

@@ -18,20 +18,23 @@ public class DownloadConfirmDialog {
     public AlertDialog createConfirm(String asv) {
         AlertDialog.Builder builder = new AlertDialog.Builder(fragment.getView().getContext());
 
-        String st = fragment.getString(R.string.download_confirm).replace("@profile_id", profile);
-        st = st.replace("@asv", asv);
+        String st = fragment.getString(R.string.confirm_download)
+                .replace("@profile_id", profile)
+                .replace("@asv", asv);
 
         builder.setMessage(st)
-                .setPositiveButton(R.string.button_download, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.title_download, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         DownloadTask dTask = new DownloadTask(fragment, profile);
                         dTask.execute("");
+
+                        dialog.cancel();
                     }})
-                .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.title_cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
+                        dialog.cancel();
                     }});
 
         return builder.create();

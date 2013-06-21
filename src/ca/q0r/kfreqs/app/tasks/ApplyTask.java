@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
+import ca.q0r.kfreqs.app.R;
 import ca.q0r.kfreqs.app.util.RootUtils;
 import ca.q0r.kfreqs.app.util.Utils;
 
@@ -25,8 +26,8 @@ public class ApplyTask extends AsyncTask<String, Void, Boolean> {
     protected void onPreExecute() {
         pDialog = new ProgressDialog(fragment.getView().getContext());
 
-        pDialog.setTitle("Applying");
-        pDialog.setMessage("Please wait...");
+        pDialog.setTitle(R.string.title_applying);
+        pDialog.setMessage(fragment.getString(R.string.text_please_wait));
         pDialog.setIndeterminate(true);
         pDialog.show();
     }
@@ -63,18 +64,18 @@ public class ApplyTask extends AsyncTask<String, Void, Boolean> {
     @Override
     protected void onPostExecute(Boolean result) {
         if (pDialog != null) {
-            pDialog.setMessage("Apply Complete!");
+            pDialog.setMessage(fragment.getString(R.string.action_apply_complete));
             pDialog.cancel();
         }
 
         Toast toast = Toast.makeText(fragment.getView().getContext(), "", Toast.LENGTH_LONG);
 
         toast.setDuration(Toast.LENGTH_LONG);
-        toast.setText("Apply Not Successful!");
+        toast.setText(R.string.action_apply_fail);
 
 
         if (result) {
-            toast.setText("Apply Successful!");
+            toast.setText(R.string.action_apply_success);
         }
 
         toast.show();

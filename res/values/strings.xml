@@ -1,31 +1,71 @@
 <resources>
 
     <string name="settings_title">Settings</string>
+    <string name="settings_refresh">Refresh</string>
 
-    <string name="button_upload">Upload</string>
-    <string name="button_download">Download</string>
-    <string name="button_apply">Apply</string>
-    <string name="button_write">Write</string>
-    <string name="button_cancel">Cancel</string>
-    <string name="button_yes">Yes</string>
-    <string name="button_no">No</string>
-
-    <string name="string_local">Local</string>
-    <string name="string_remote">Remote</string>
+    <string name="title_apply">Apply</string>
+    <string name="title_applying">Applying</string>
+    <string name="title_asv">ASV Number</string>
+    <string name="title_cancel">Cancel</string>
+    <string name="title_download">Download</string>
+    <string name="title_downloading">Downloading Profile</string>
+    <string name="title_info">Downloading Info</string>
+    <string name="title_local">Local</string>
+    <string name="title_name">Name</string>
+    <string name="title_no">No</string>
+    <string name="title_profiles">Loading Profiles</string>
+    <string name="title_remote">Remote</string>
+    <string name="title_upload">Upload</string>
+    <string name="title_uploading">Uploading</string>
+    <string name="title_write">Write</string>
+    <string name="title_writing">Writing Profile</string>
+    <string name="title_yes">Yes</string>
 
     <string name="developer_title">Developer Info</string>
     <string name="developer_text">Developed by MiracleM4n</string>
 
-    <string name="menu_initial">Unexpected error!</string>
-    <string name="menu_no_root">No root access, or timeout!</string>
-    <string name="menu_no_kernel">Kernel not supported!</string>
+    <string name="text_initial">Unexpected error!</string>
+    <string name="text_no_kernel">Kernel not supported!</string>
+    <string name="text_no_root">No root access, or timeout!</string>
 
-    <string name="name">Name</string>
-    <string name="asv_number">ASV Number</string>
+    <string name="text_asv_blank">ASV is blank!</string>
+    <string name="text_asv_not_number">ASV isn't a number!</string>
+    <string name="text_name_blank">Name is blank!</string>
+    <string name="text_no_internet">No Internet Connection Found!</string>
+    <string name="text_not_asv">ASV has to be 1\-12!</string>
+    <string name="text_please_wait">Please wait\.\.\.</string>
 
-    <string name="email_usage">Uses Account Email for contact!</string>
-    <string name="apply_confirm">Are you sure you want to apply profile \"@profile_id\"?</string>
-    <string name="upload_confirm">Are you sure you want to upload profile \"@profile_id\"?</string>
-    <string name="download_confirm">Are you sure you want to download \"@profile_id\" with ASV \"@asv\"?</string>
+    <string name="email_usage">Uses Android Email for contact!</string>
+
+    <string name="confirm_upload">Are you sure you want to upload profile \"@profile_id\"?</string>
+    <string name="confirm_apply">Are you sure you want to apply profile \"@profile_id\"?</string>
+    <string name="confirm_download">Are you sure you want to download profile \"@profile_id\" with ASV \"@asv\"?</string>
+
+    <string name="action_apply_complete">Profile Application Complete!</string>
+    <string name="action_apply_fail">Profile Application Failed!</string>
+    <string name="action_apply_success">Profile Applied Successfully!</string>
+
+    <string name="action_download_complete">Profile Download Complete!</string>
+    <string name="action_download_fail">Profile Download Failed!</string>
+    <string name="action_download_success">Profile Download Successful!</string>
+
+    <string name="action_info_complete">Info Download Complete!</string>
+    <string name="action_info_fail">Info Download Failed!</string>
+    <string name="action_info_success">Info Download Successful!</string>
+
+    <string name="action_profile_complete">Profile Load Complete!</string>
+    <string name="action_profile_fail">Profile Load Failed!</string>
+    <string name="action_profile_success">Profile Load Successful!</string>
+
+    <string name="action_reload_success">Tab Reloaded Successfully!</string>
+    <string name="action_reload_fail">Tab Reload Failed!</string>
+
+    <string name="action_upload_complete">Profile Upload Complete!</string>
+    <string name="action_upload_fail">Profile Upload Failed!</string>
+    <string name="action_upload_success">Profile Upload Successful!</string>
+
+    <string name="action_write_complete">Profile Write Complete!</string>
+    <string name="action_write_fail">Profile Write Failed!</string>
+    <string name="action_write_success">Profile Write Successful!</string>
 
 </resources>

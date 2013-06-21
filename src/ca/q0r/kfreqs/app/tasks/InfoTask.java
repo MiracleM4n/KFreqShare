@@ -5,7 +5,9 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.support.v4.app.Fragment;
 import android.widget.Toast;
+import ca.q0r.kfreqs.app.R;
 import ca.q0r.kfreqs.app.tabs.RemoteTab;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -42,8 +44,8 @@ public class InfoTask extends AsyncTask<String, Void, Object> {
     protected void onPreExecute() {
         pDialog = new ProgressDialog(tab.getView().getContext());
 
-        pDialog.setTitle("Downloading Info");
-        pDialog.setMessage("Please wait...");
+        pDialog.setTitle(R.string.title_info);
+        pDialog.setMessage(tab.getString(R.string.text_please_wait));
         pDialog.setIndeterminate(true);
         pDialog.show();
     }
@@ -77,7 +79,7 @@ public class InfoTask extends AsyncTask<String, Void, Object> {
                 httpclient.getConnectionManager().shutdown();
             }
         } else {
-            pDialog.setMessage("No Internet Connection Found!");
+            pDialog.setMessage(tab.getString(R.string.text_no_internet));
             pDialog.cancel();
         }
 
@@ -86,15 +88,15 @@ public class InfoTask extends AsyncTask<String, Void, Object> {
 
     @Override
     protected void onPostExecute(Object obj) {
-        pDialog.setMessage("Info Download Complete!");
-        pDialog.cancel();
-
         Toast toast = Toast.makeText(tab.getView().getContext(), "", Toast.LENGTH_LONG);
 
         toast.setDuration(Toast.LENGTH_LONG);
-        toast.setText("Info Download Not Successful!");
+        toast.setText(R.string.action_info_fail);
 
-        if (obj instanceof JSONObject) {
+        if (obj != null && obj instanceof JSONObject) {
+            pDialog.setMessage(tab.getString(R.string.action_info_complete));
+            pDialog.cancel();
+
             JSONObject jObj = (JSONObject) obj;
 
             for (Object kV : jObj.entrySet()) {
@@ -108,7 +110,7 @@ public class InfoTask extends AsyncTask<String, Void, Object> {
             tab.setList(list);
             tab.setAsvMap(aMap);
 
-            toast.setText("Info Download Successful!");
+            toast.setText(R.string.action_info_success);
         }
 
         if (showToast) {

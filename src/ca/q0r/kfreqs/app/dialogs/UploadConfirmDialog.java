@@ -17,23 +17,25 @@ public class UploadConfirmDialog {
     public AlertDialog createDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(fragment.getView().getContext());
 
-        String st = fragment.getString(R.string.upload_confirm).replace("@profile_id", profile.split("\\.")[0]);
+        String st = fragment.getString(R.string.confirm_upload)
+                .replace("@action", "upload")
+                .replace("@profile_id", profile.split("\\.")[0]);
 
         builder.setMessage(st)
-                .setPositiveButton(R.string.button_upload, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.title_upload, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         UploadInfoDialog iDialog = new UploadInfoDialog(fragment, profile);
 
                         AlertDialog d = iDialog.createDialog();
 
-                        dialog.dismiss();
+                        dialog.cancel();
                         d.show();
                     }})
-                .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.title_cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
+                        dialog.cancel();
                     }});
 
         return builder.create();

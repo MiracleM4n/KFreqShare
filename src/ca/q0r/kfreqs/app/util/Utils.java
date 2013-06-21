@@ -6,6 +6,7 @@ import android.content.Context;
 import android.provider.Settings;
 import android.text.Editable;
 import android.widget.Toast;
+import ca.q0r.kfreqs.app.R;
 import org.json.simple.JSONObject;
 
 import java.io.File;
@@ -72,10 +73,13 @@ public class Utils {
     }
 
     public static Boolean isASV(String asv) {
+        Integer i = null;
 
-        Integer i = Integer.parseInt(asv);
+        try {
+            i = Integer.parseInt(asv);
+        } catch(Exception ignored) {}
 
-        return i != null && i < 12 && i > 0;
+        return i != null && i < 13 && i > 0;
     }
 
     public static Boolean isNumber(String asv) {
@@ -98,19 +102,19 @@ public class Utils {
         }
 
         if (asv == null || asv.toString().isEmpty()) {
-            toast.setText("ASV is blank!");
+            toast.setText(R.string.text_asv_blank);
             toast.show();
             return false;
         }
 
-        if (!isNumber(asv.toString().replace("0", ""))) {
-            toast.setText("ASV isn't a number!");
+        if (!isNumber(asv.toString())) {
+            toast.setText(R.string.text_asv_not_number);
             toast.show();
             return false;
         }
 
-        if (!isASV(asv.toString().replace("0", ""))) {
-            toast.setText("ASV has to be 0-12!");
+        if (!isASV(asv.toString())) {
+            toast.setText(R.string.text_not_asv);
             toast.show();
             return false;
         }
