@@ -5,7 +5,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.support.v4.app.Fragment;
 import android.widget.Toast;
 import ca.q0r.kfreqs.app.R;
 import ca.q0r.kfreqs.app.tabs.RemoteTab;

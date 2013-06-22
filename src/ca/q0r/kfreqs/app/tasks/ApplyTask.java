@@ -11,7 +11,7 @@ import ca.q0r.kfreqs.app.util.Utils;
 import java.io.BufferedReader;
 import java.io.FileReader;
 
-//TODO: Implement Applying of Profiles
+//TODO: Finish Implementing
 public class ApplyTask extends AsyncTask<String, Void, Boolean> {
     private ProgressDialog pDialog;
     private Fragment fragment;
@@ -63,10 +63,8 @@ public class ApplyTask extends AsyncTask<String, Void, Boolean> {
 
     @Override
     protected void onPostExecute(Boolean result) {
-        if (pDialog != null) {
-            pDialog.setMessage(fragment.getString(R.string.action_apply_complete));
-            pDialog.cancel();
-        }
+        pDialog.setMessage(fragment.getString(R.string.action_apply_complete));
+        pDialog.cancel();
 
         Toast toast = Toast.makeText(fragment.getView().getContext(), "", Toast.LENGTH_LONG);
 
