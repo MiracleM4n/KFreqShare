@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 import ca.q0r.kfreqs.app.R;
-import ca.q0r.kfreqs.app.tasks.UploadTask;
+import ca.q0r.kfreqs.app.tasks.ProfileUploadTask;
 import ca.q0r.kfreqs.app.util.Utils;
 import org.json.JSONObject;
 
@@ -117,7 +117,7 @@ public class UploadInfoDialog {
     }
 
     private void upload(JSONObject json) {
-        UploadTask task = new UploadTask(fragment, json);
+        ProfileUploadTask task = new ProfileUploadTask(fragment, json);
         task.execute("");
     }
 }

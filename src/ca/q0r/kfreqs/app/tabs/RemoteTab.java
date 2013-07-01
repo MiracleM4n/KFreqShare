@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.*;
 import ca.q0r.kfreqs.app.R;
 import ca.q0r.kfreqs.app.dialogs.DownloadConfirmDialog;
-import ca.q0r.kfreqs.app.tasks.InfoTask;
+import ca.q0r.kfreqs.app.tasks.InfoDownloadTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +30,7 @@ public class RemoteTab extends Fragment implements View.OnClickListener {
 
         adapter.setNotifyOnChange(true);
 
-        InfoTask task = new InfoTask(this, true);
+        InfoDownloadTask task = new InfoDownloadTask(this, true);
         task.execute("");
 
         LinearLayout uploadDecline = (LinearLayout) getView().findViewById(R.id.layout_dc);

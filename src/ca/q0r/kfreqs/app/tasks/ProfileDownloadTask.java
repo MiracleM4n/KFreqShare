@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
 import ca.q0r.kfreqs.app.R;
+import com.google.gson.Gson;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -16,20 +17,19 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
-public class DownloadTask extends AsyncTask<String, Void, Object> {
+public class ProfileDownloadTask extends AsyncTask<String, Void, Object> {
     private ProgressDialog pDialog;
     private Fragment fragment;
     private String pName;
     private HashMap<String, String> vMap;
     private Boolean connect;
 
-    public DownloadTask(Fragment frag, String profile) {
+    public ProfileDownloadTask(Fragment frag, String profile) {
         fragment = frag;
         pName = profile;
         vMap = new HashMap<String, String>();
@@ -66,9 +66,12 @@ public class DownloadTask extends AsyncTask<String, Void, Object> {
                 HttpResponse response = httpclient.execute(httpPostRequest);
                 HttpEntity entity = response.getEntity();
 
-                JSONParser parser = new JSONParser();
+                Gson gson = new Gson();
+                HashMap<?,?> map = gson.fromJson(EntityUtils.toString(entity), HashMap.class);
 
-                return parser.parse(EntityUtils.toString(entity));
+                for (Map.Entry entry : map.entrySet()) {
+                    vMap.put(entry.getKey().toString(), entry.getValue().toString());
+                }
             } catch (Exception ignored) {
             } finally {
                 httpclient.getConnectionManager().shutdown();
@@ -92,25 +95,13 @@ public class DownloadTask extends AsyncTask<String, Void, Object> {
         toast.setDuration(Toast.LENGTH_LONG);
         toast.setText(R.string.action_download_fail);
 
-        if (obj != null && obj instanceof JSONObject) {
-            pDialog.setMessage(fragment.getString(R.string.action_download_complete));
-            pDialog.cancel();
-
-            JSONObject jObj = (JSONObject) obj;
-
-            for (Object kV : jObj.entrySet()) {
-                String key = kV.toString().split("=")[0];
-                String value = jObj.get(key).toString();
-
-                vMap.put(key, value);
-            }
-
+        if (vMap != null && !vMap.isEmpty()) {
             toast.setText(R.string.action_download_success);
         }
 
         toast.show();
 
-        WriteTask wTask = new WriteTask(fragment, pName, vMap);
+        ProfileWriteTask wTask = new ProfileWriteTask(fragment, pName, vMap);
         wTask.execute("");
     }
 }

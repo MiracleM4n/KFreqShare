@@ -6,10 +6,10 @@ import ca.q0r.kfreqs.app.R;
 import ca.q0r.kfreqs.app.tabs.LocalTab;
 import ca.q0r.kfreqs.app.tabs.RemoteTab;
 
-public class RefreshTask {
+public class TabRefreshTask {
     private Fragment fragment;
 
-    public RefreshTask(Fragment frag) {
+    public TabRefreshTask(Fragment frag) {
         fragment = frag;
     }
 
@@ -22,14 +22,14 @@ public class RefreshTask {
         if (fragment instanceof LocalTab) {
             LocalTab lTab = (LocalTab) fragment;
 
-            ProfileTask task = new ProfileTask(lTab, false);
+            ProfileLoadTask task = new ProfileLoadTask(lTab, false);
             task.execute("");
 
             toast.setText(R.string.action_reload_success);
         } else if (fragment instanceof RemoteTab) {
             RemoteTab rTab = (RemoteTab) fragment;
 
-            InfoTask task = new InfoTask(rTab, false);
+            InfoDownloadTask task = new InfoDownloadTask(rTab, false);
             task.execute("");
 
             toast.setText(R.string.action_reload_success);

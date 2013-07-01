@@ -12,12 +12,12 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 
 //TODO: Finish Implementing
-public class ApplyTask extends AsyncTask<String, Void, Boolean> {
+public class ProfileApplyTask extends AsyncTask<String, Void, Boolean> {
     private ProgressDialog pDialog;
     private Fragment fragment;
     private String profile;
 
-    public ApplyTask(Fragment frag, String pName) {
+    public ProfileApplyTask(Fragment frag, String pName) {
         fragment = frag;
         profile = pName.split("\\.")[0];
     }

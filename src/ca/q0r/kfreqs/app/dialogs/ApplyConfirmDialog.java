@@ -4,7 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
 import ca.q0r.kfreqs.app.R;
-import ca.q0r.kfreqs.app.tasks.ApplyTask;
+import ca.q0r.kfreqs.app.tasks.ProfileApplyTask;
 
 public class ApplyConfirmDialog {
     private Fragment fragment;
@@ -25,7 +25,7 @@ public class ApplyConfirmDialog {
                 .setPositiveButton(R.string.title_apply, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        ApplyTask task = new ApplyTask(fragment, profile);
+                        ProfileApplyTask task = new ProfileApplyTask(fragment, profile);
 
                         task.execute("");
 

@@ -12,13 +12,13 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WriteTask extends AsyncTask<String, Void, Boolean> {
+public class ProfileWriteTask extends AsyncTask<String, Void, Boolean> {
     private ProgressDialog pDialog;
     private Fragment fragment;
     private String pName;
     private HashMap<String, String> map;
 
-    public WriteTask(Fragment frag, String profile, HashMap<String, String> pMap) {
+    public ProfileWriteTask(Fragment frag, String profile, HashMap<String, String> pMap) {
         fragment = frag;
         pName = profile;
         map = pMap;

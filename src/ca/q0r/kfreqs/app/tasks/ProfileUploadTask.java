@@ -21,13 +21,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UploadTask extends AsyncTask<String, Void, Boolean> {
+public class ProfileUploadTask extends AsyncTask<String, Void, Boolean> {
     private ProgressDialog pDialog;
     private Fragment fragment;
     private JSONObject json;
     private boolean connect;
 
-    public UploadTask(Fragment frag, JSONObject jObj) {
+    public ProfileUploadTask(Fragment frag, JSONObject jObj) {
         fragment = frag;
         json = jObj;
         connect = true;

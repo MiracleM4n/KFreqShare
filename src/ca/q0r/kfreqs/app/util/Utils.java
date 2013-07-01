@@ -7,7 +7,8 @@ import android.provider.Settings;
 import android.text.Editable;
 import android.widget.Toast;
 import ca.q0r.kfreqs.app.R;
-import org.json.simple.JSONObject;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -159,11 +160,11 @@ public class Utils {
         return  id != null ? id : "";
     }
 
-    public static HashMap<String, String> getMapFromJSON(JSONObject json) {
+    public static HashMap<String, String> getMapFromJSON(JsonObject gson) {
         HashMap<String, String> map = new HashMap<String, String>();
 
-        for (Object key : json.entrySet()) {
-            map.put(key.toString(), json.get(key).toString());
+        for (Map.Entry<String, JsonElement> key : gson.entrySet()) {
+            map.put(key.getKey(), key.getValue().getAsString());
         }
 
         return map;

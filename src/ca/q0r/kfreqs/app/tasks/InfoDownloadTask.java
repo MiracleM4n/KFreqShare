@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 import ca.q0r.kfreqs.app.R;
 import ca.q0r.kfreqs.app.tabs.RemoteTab;
+import com.google.gson.Gson;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -16,15 +17,10 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
+import java.util.*;
 
-public class InfoTask extends AsyncTask<String, Void, Object> {
+public class InfoDownloadTask extends AsyncTask<String, Void, Object> {
     private ProgressDialog pDialog;
     private RemoteTab tab;
     private Boolean showToast;
@@ -32,7 +28,7 @@ public class InfoTask extends AsyncTask<String, Void, Object> {
     private HashMap<String, String> aMap;
     private Boolean connect;
 
-    public InfoTask(RemoteTab rTab, Boolean toast) {
+    public InfoDownloadTask(RemoteTab rTab, Boolean toast) {
         tab = rTab;
         list = new ArrayList<String>();
         aMap = new HashMap<String, String>();
@@ -61,7 +57,7 @@ public class InfoTask extends AsyncTask<String, Void, Object> {
             DefaultHttpClient httpclient = new DefaultHttpClient();
 
             try {
-                HttpPost httpPostRequest = new HttpPost("http://q0r.ca/abb/download.php");
+                HttpPost httpPostRequest = new HttpPost("http://q0r.ca/abb/info.php");
 
                 ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
                 nameValuePairs.add(new BasicNameValuePair("keys", "?"));
@@ -70,9 +66,18 @@ public class InfoTask extends AsyncTask<String, Void, Object> {
                 HttpResponse response = httpclient.execute(httpPostRequest);
                 HttpEntity entity = response.getEntity();
 
-                JSONParser parser = new JSONParser();
+                String json = EntityUtils.toString(entity);
 
-                return parser.parse(EntityUtils.toString(entity));
+                Gson gson = new Gson();
+                Map<?,?> map = gson.fromJson(json, Map.class);
+
+                for (Map.Entry entry : map.entrySet()) {
+                    String key = entry.getKey().toString();
+                    String value = entry.getValue().toString();
+
+                    list.add(key);
+                    aMap.put(key, value);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -89,28 +94,17 @@ public class InfoTask extends AsyncTask<String, Void, Object> {
     protected void onPostExecute(Object obj) {
         if (!connect) {
             pDialog.setMessage(tab.getString(R.string.text_no_internet));
-            pDialog.cancel();
         }
+
+        pDialog.cancel();
 
         Toast toast = Toast.makeText(tab.getView().getContext(), "", Toast.LENGTH_LONG);
 
         toast.setDuration(Toast.LENGTH_LONG);
         toast.setText(R.string.action_info_fail);
 
-        if (obj != null && obj instanceof JSONObject) {
-            pDialog.setMessage(tab.getString(R.string.action_info_complete));
-            pDialog.cancel();
-
-            JSONObject jObj = (JSONObject) obj;
-
-            for (Object kV : jObj.entrySet()) {
-                String key = kV.toString().split("=")[0];
-                String value = jObj.get(key).toString();
-
-                list.add(key);
-                aMap.put(key, value);
-            }
-
+        if (list != null && !list.isEmpty()
+                && aMap != null && !aMap.isEmpty()) {
             tab.setList(list);
             tab.setAsvMap(aMap);
 

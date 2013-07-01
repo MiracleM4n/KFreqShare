@@ -4,7 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
 import ca.q0r.kfreqs.app.R;
-import ca.q0r.kfreqs.app.tasks.DownloadTask;
+import ca.q0r.kfreqs.app.tasks.ProfileDownloadTask;
 
 public class DownloadConfirmDialog {
     private Fragment fragment;
@@ -26,7 +26,7 @@ public class DownloadConfirmDialog {
                 .setPositiveButton(R.string.title_download, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        DownloadTask dTask = new DownloadTask(fragment, profile);
+                        ProfileDownloadTask dTask = new ProfileDownloadTask(fragment, profile);
                         dTask.execute("");
 
                         dialog.cancel();

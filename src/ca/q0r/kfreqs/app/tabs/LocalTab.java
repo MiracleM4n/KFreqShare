@@ -9,7 +9,7 @@ import android.widget.*;
 import ca.q0r.kfreqs.app.R;
 import ca.q0r.kfreqs.app.dialogs.ApplyConfirmDialog;
 import ca.q0r.kfreqs.app.dialogs.UploadConfirmDialog;
-import ca.q0r.kfreqs.app.tasks.ProfileTask;
+import ca.q0r.kfreqs.app.tasks.ProfileLoadTask;
 
 import java.util.ArrayList;
 
@@ -27,7 +27,7 @@ public class LocalTab extends Fragment implements View.OnClickListener {
 
         adapter.setNotifyOnChange(true);
 
-        ProfileTask task = new ProfileTask(this, true);
+        ProfileLoadTask task = new ProfileLoadTask(this, true);
         task.execute("");
 
         LinearLayout uploadDecline = (LinearLayout) getView().findViewById(R.id.layout_cau);

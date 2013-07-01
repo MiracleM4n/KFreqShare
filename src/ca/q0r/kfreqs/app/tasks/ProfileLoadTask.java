@@ -10,13 +10,13 @@ import ca.q0r.kfreqs.app.util.Utils;
 import java.io.File;
 import java.util.ArrayList;
 
-public class ProfileTask extends AsyncTask<String, Void, Boolean> {
+public class ProfileLoadTask extends AsyncTask<String, Void, Boolean> {
     private ProgressDialog pDialog;
     private LocalTab tab;
     private Boolean showToast;
     public ArrayList<String> list;
 
-    public ProfileTask(LocalTab lTab, Boolean toast) {
+    public ProfileLoadTask(LocalTab lTab, Boolean toast) {
         tab = lTab;
         list = new ArrayList<String>();
         showToast = toast;
