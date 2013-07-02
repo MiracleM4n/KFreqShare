@@ -160,7 +160,7 @@ public class Utils {
         return  id != null ? id : "";
     }
 
-    public static HashMap<String, String> getMapFromJSON(JsonObject gson) {
+    public static HashMap<String, String> getMapFromJson(JsonObject gson) {
         HashMap<String, String> map = new HashMap<String, String>();
 
         for (Map.Entry<String, JsonElement> key : gson.entrySet()) {

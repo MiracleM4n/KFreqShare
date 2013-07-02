@@ -2,6 +2,7 @@ package ca.q0r.kfreqs.app.dialogs;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.view.LayoutInflater;
@@ -11,7 +12,7 @@ import android.widget.Toast;
 import ca.q0r.kfreqs.app.R;
 import ca.q0r.kfreqs.app.tasks.ProfileUploadTask;
 import ca.q0r.kfreqs.app.util.Utils;
-import org.json.JSONObject;
+import com.google.gson.JsonObject;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -65,9 +66,9 @@ public class UploadInfoDialog {
         return builder.create();
     }
 
-    private JSONObject getJsonFromProfile(String profile) {
+    private JsonObject getJsonFromProfile(String profile) {
         File file = new File(Utils.getProfilesPath(), profile);
-        JSONObject ob = new JSONObject();
+        JsonObject json = new JsonObject();
 
         Properties prop = new Properties();
 
@@ -80,7 +81,7 @@ public class UploadInfoDialog {
 
                 if (key.startsWith("CPU_VOLT_")) {
                     try {
-                        ob.put(key.replace("CPU_VOLT_", ""), value);
+                        json.addProperty(key.replace("CPU_VOLT_", ""), value);
                     } catch (Exception ignored) {}
                 }
 
@@ -91,32 +92,33 @@ public class UploadInfoDialog {
 
                         Integer i = Integer.parseInt(value) * 1000;
 
-                        ob.put(key, i.toString());
+                        json.addProperty(key, i.toString());
                     } catch (Exception ignored) { }
                 }
             }
         } catch (Exception ignored) { }
 
-        return ob;
+        return json;
     }
 
     private void uploadProfile(String profile, String name, String asv) {
-        JSONObject ob = getJsonFromProfile(profile);
+        JsonObject json = getJsonFromProfile(profile);
 
-        if (ob.length() == 0) {
+        if (json.entrySet().size() == 0) {
             return;
         }
 
         try {
-            ob.put("name", name);
-            ob.put("asv", asv);
-            ob.put("id", Utils.getEmail(fragment.getView().getContext()));
+            json.addProperty("name", name);
+            json.addProperty("asv", asv);
+            json.addProperty("id", Utils.getEmail(fragment.getView().getContext()));
+            json.addProperty("model", Build.MODEL.replace("GT-", "").toLowerCase());
         } catch (Exception ignored) { }
 
-        upload(ob);
+        upload(json);
     }
 
-    private void upload(JSONObject json) {
+    private void upload(JsonObject json) {
         ProfileUploadTask task = new ProfileUploadTask(fragment, json);
         task.execute("");
     }

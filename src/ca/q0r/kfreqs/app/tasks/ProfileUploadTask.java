@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
 import ca.q0r.kfreqs.app.R;
+import com.google.gson.JsonObject;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -16,7 +17,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +24,10 @@ import java.util.List;
 public class ProfileUploadTask extends AsyncTask<String, Void, Boolean> {
     private ProgressDialog pDialog;
     private Fragment fragment;
-    private JSONObject json;
+    private JsonObject json;
     private boolean connect;
 
-    public ProfileUploadTask(Fragment frag, JSONObject jObj) {
+    public ProfileUploadTask(Fragment frag, JsonObject jObj) {
         fragment = frag;
         json = jObj;
         connect = true;
@@ -52,7 +52,7 @@ public class ProfileUploadTask extends AsyncTask<String, Void, Boolean> {
 
         if (networkInfo != null && networkInfo.isConnected()) {
             try {
-                String id = json.getString("id");
+                String id = json.get("id").getAsString();
 
                 if (id == null || id.isEmpty()) {
 
